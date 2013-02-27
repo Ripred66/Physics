@@ -121,19 +121,12 @@ void *electron( void *loc ) {
 				
 				
 				calculate_force(types, *index, x , &current);
-									
-				current.accelerationX += acceleration_forceMass( current.forceX, electronAttributes.mass ) - current.accelerationX;
-				current.accelerationY += acceleration_forceMass( current.forceY, electronAttributes.mass ) - current.accelerationY;
-				current.accelerationZ += acceleration_forceMass( current.forceZ, electronAttributes.mass ) - current.accelerationZ;
-				
-				current.velocityX += velocity_accelerationTime( current.accelerationX , time - initialTime ) - current.velocityX;
-				current.velocityY += velocity_accelerationTime( current.accelerationY , time - initialTime ) - current.velocityY;
-				current.velocityZ += velocity_accelerationTime( current.accelerationZ , time - initialTime ) - current.velocityZ;
+				calculate_acceleration( &current, electronAttributes.mass );
+				calculate_velocity( &current, time - initialTime );					
 			
 				calculate_displacement( types , time - initialTime , &current );
 			
 			}
-			
 		
 		}
 		
@@ -142,15 +135,8 @@ void *electron( void *loc ) {
 			
 			
 				calculate_force( types, *index, x, &current );
-									
 				calculate_acceleration( &current, electronAttributes.mass );
-				
 				calculate_velocity( &current, time - initialTime );
-				
-				//displacementX += -metres_velocityTime( current.velocityX, time - initialTime );
-				//displacementY += -metres_velocityTime( current.velocityY, time - initialTime );
-				//displacementZ += -metres_velocityTime( current.velocityZ, time - initialTime );
-				
 		
 		}
 		types[1] = ELECTRON;
