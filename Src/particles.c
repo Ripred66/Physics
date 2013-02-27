@@ -78,28 +78,25 @@ void *electron( void *loc ) {
 	
 	//Justs checks to see if no electron is holding the same position.
 	//The new location is based on probability that it won't be there again.
-	if (  *index != 0 ) {
-		
-		for ( x = 0;x < *index; x++) {
+	for ( x = 0;x < *index; x++) {
 			
-			if (electronLocations[*index].x == electronLocations[x].x && 
+		if (electronLocations[*index].x == electronLocations[x].x && 
 			electronLocations[*index].y == electronLocations[x].y &&
 			electronLocations[*index].z == electronLocations[x].z) {
 					
-				electronLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				electronLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				electronLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+			electronLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+			electronLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+			electronLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
 				
-				x = 0;
+			x = 0;
 				
-			}
-		
 		}
-	
+		
 	}
 	
 	electronLocations[*index].done = 1;
 	
+	//Math can only be done two numbers at a time.
 	int types[2];
 	
 	long double time = 0.100000000000000;
@@ -134,16 +131,16 @@ void *electron( void *loc ) {
 		for (x = 0;x < numParticles[0].amountProton;x++) {
 			
 			
-				calculate_force( types, *index, x, &current );
-				calculate_acceleration( &current, electronAttributes.mass );
-				calculate_velocity( &current, time - initialTime );
+			calculate_force( types, *index, x, &current );
+			calculate_acceleration( &current, electronAttributes.mass );
+			calculate_velocity( &current, time - initialTime );
 		
 		}
 		types[1] = ELECTRON;
 		
-		electronLocations[*index].x = current.displacementX;
-		electronLocations[*index].y = current.displacementY;
-		electronLocations[*index].z = current.displacementZ;
+		electronLocations[*index].x += current.displacementX;
+		electronLocations[*index].y += current.displacementY;
+		electronLocations[*index].z += current.displacementZ;
 		
 		printf("\n%d x = %f", *index, electronLocations[*index].x);
 		printf("\n%d y = %f", *index, electronLocations[*index].y);
@@ -189,25 +186,21 @@ void *proton( void *loc ) {
 		}
 		
 	}
-	
-	if ( *index != 0 ) {
 		
-		for (x = 0; x < *index;x++) {
+	for (x = 0; x < *index;x++) {
 			
-			if ( protonLocations[*index].x == protonLocations[x].x &&
-				 protonLocations[*index].y == protonLocations[x].y &&
-				 protonLocations[*index].z == protonLocations[x].z) {
+		if ( protonLocations[*index].x == protonLocations[x].x &&
+			 protonLocations[*index].y == protonLocations[x].y &&
+			 protonLocations[*index].z == protonLocations[x].z) {
 					 
-					protonLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-					protonLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-					protonLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+				protonLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+				protonLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+				protonLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
 					
-					x = 0;
-					 
-			}
-			
+				x = 0;
+				 
 		}
-		
+			
 	}
 	
 	/*while (finished == 0) {
@@ -223,10 +216,9 @@ void *proton( void *loc ) {
 void calculate_force( int *types , int index1 , int index2 ,  struct movement *this ) {
 	
 	
+	//Because interaction at the nano level is too quickly to see.
 	long double scale = 25;
 	
-	
-	// I realize you cannot determine a particle's attributes just solely on charge. I'll change it later.
 	if (types[0] == ELECTRON && types[1] == ELECTRON) {
 		
 		
@@ -275,11 +267,13 @@ void calculate_displacement( int *types , long double time , struct movement *th
 	
 	if ( types[0] == ELECTRON && types[1] == ELECTRON ) {
 		
-		//metres_velocityTime( this-> );
+		this->displacementX += metres_velocityTime( this->velocityX, time );
+		this->displacementX += metres_velocityTime( this->velocityX, time );
+		this->displacementX += metres_velocityTime( this->velocityX, time );
 	
 	} else if ( types[0] == ELECTRON && types[1] == PROTON ) {
 		
-	
+		
 	
 	}
 	
