@@ -45,16 +45,15 @@ struct movement {
 
 struct particle electronAttributes;
 struct particle protonAttributes;
-
-void calculate_displacement( int *types, long double time , struct movement *this);
 							 
-void calculate_velocity( struct movement *cords );
 void calculate_force( int *types , int index1 , int index2 , struct movement *this);
+void calculate_acceleration( struct movement *this, long double mass );
+void calculate_velocity( struct movement *this , long double time );
+void calculate_displacement( int *types, long double time , struct movement *this);
 
 void init_particle_constants() {
 	
 	electronAttributes.mass = 9.10938188e-31;
-	//printf("%.39Lf", electronAttributes.mass);
 	electronAttributes.charge = -1.60217646e-19;
 	
 	protonAttributes.mass = 1.67262158e-27;
@@ -110,7 +109,7 @@ void *electron( void *loc ) {
 	while (finished == 0) {
 	
 		types[0] = ELECTRON;
-		types[1] = PROTON;
+		types[1] = ELECTRON;
 		
 		for (x = 0;x < numParticles[0].amountElectron;x++) {
 		
@@ -144,13 +143,9 @@ void *electron( void *loc ) {
 			
 				calculate_force( types, *index, x, &current );
 									
-				current.accelerationX += acceleration_forceMass( current.forceX, electronAttributes.mass ) - current.accelerationX;
-				current.accelerationY += acceleration_forceMass( current.forceY, electronAttributes.mass ) - current.accelerationY;
-				current.accelerationZ += acceleration_forceMass( current.forceZ, electronAttributes.mass ) - current.accelerationZ;
+				calculate_acceleration( &current, electronAttributes.mass );
 				
-				current.velocityX += velocity_accelerationTime( current.accelerationX , time - initialTime ) - current.velocityX;
-				current.velocityY += velocity_accelerationTime( current.accelerationY , time - initialTime ) - current.velocityY;
-				current.velocityZ += velocity_accelerationTime( current.accelerationZ , time - initialTime ) - current.velocityZ;
+				calculate_velocity( &current, time - initialTime );
 				
 				//displacementX += -metres_velocityTime( current.velocityX, time - initialTime );
 				//displacementY += -metres_velocityTime( current.velocityY, time - initialTime );
@@ -158,6 +153,7 @@ void *electron( void *loc ) {
 				
 		
 		}
+		types[1] = ELECTRON;
 		
 		electronLocations[*index].x = current.displacementX;
 		electronLocations[*index].y = current.displacementY;
@@ -238,19 +234,6 @@ void *proton( void *loc ) {
 	
 }
 
-void calculate_displacement( int *types , long double time , struct movement *this ) {
-	
-	if ( types[0] == ELECTRON && types[1] == ELECTRON ) {
-		
-		//metres_velocityTime( this-> );
-	
-	} else if ( types[0] == ELECTRON && types[1] == PROTON ) {
-		
-	
-	
-	}
-	
-}
 void calculate_force( int *types , int index1 , int index2 ,  struct movement *this ) {
 	
 	
@@ -284,4 +267,34 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 	}
 	
 
+}
+
+void calculate_acceleration( struct movement *this , long double mass ) {
+	
+	this->accelerationX += acceleration_forceMass( this->forceX , mass );
+	this->accelerationY += acceleration_forceMass( this->forceY , mass );
+	this->accelerationZ += acceleration_forceMass( this->forceZ , mass );
+
+
+}
+void calculate_velocity( struct movement *this , long double time ) {
+	
+	this->velocityX += velocity_accelerationTime( this->accelerationX, time );
+	this->velocityY += velocity_accelerationTime( this->accelerationY, time );
+	this->velocityZ += velocity_accelerationTime( this->accelerationZ, time );
+	
+}
+
+void calculate_displacement( int *types , long double time , struct movement *this ) {
+	
+	if ( types[0] == ELECTRON && types[1] == ELECTRON ) {
+		
+		//metres_velocityTime( this-> );
+	
+	} else if ( types[0] == ELECTRON && types[1] == PROTON ) {
+		
+	
+	
+	}
+	
 }
