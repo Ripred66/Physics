@@ -244,6 +244,7 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 	
 	//Because interaction at the nano level is too quickly to see.
 	long double scale = 25;
+	
 	long double x ,y , z;
 	long double distance;
 	
