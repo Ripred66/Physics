@@ -35,9 +35,9 @@ struct particle {
 };
 struct movement {
 	
-	long double velocityX , velocityY , velocityZ;
+	long double velocity , velocityX , velocityY , velocityZ;
 	long double initialVelocityX , initialVelocityY , initialVelocityZ;
-	long double accelerationX , accelerationY , accelerationZ;
+	long double acceleration , accelerationX , accelerationY , accelerationZ;
 	long double force , forceX , forceY , forceZ;
 	long double displacementX , displacementY , displacementZ;
 
@@ -66,23 +66,23 @@ void *electron( void *loc ) {
 	int x = 0;
 	
 	int *index = (int *)loc;
-	struct movement current = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	struct movement current = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	
 	struct timespec *hold = ( struct timespec *)malloc( sizeof(struct timespec) );
 	hold[0].tv_sec = 0;
 	hold[0].tv_nsec = 250000000;
 	
-	electronLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	electronLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	electronLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+	electronLocations[*index].x = .5000000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+	electronLocations[*index].y = .5000000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+	electronLocations[*index].z = .5000000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
 	
 	//Justs checks to see if no electron is holding the same position.
 	//The new location is based on probability that it won't be there again.
 	for ( x = 0;x < *index; x++) {
 			
-		if (electronLocations[*index].x == electronLocations[x].x && 
-			electronLocations[*index].y == electronLocations[x].y &&
-			electronLocations[*index].z == electronLocations[x].z) {
+		if ( electronLocations[*index].x == electronLocations[x].x && 
+			 electronLocations[*index].y == electronLocations[x].y &&
+			 electronLocations[*index].z == electronLocations[x].z ) {
 					
 			electronLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
 			electronLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
@@ -105,7 +105,7 @@ void *electron( void *loc ) {
 		
 	
 	//checks to see if the system is ready.
-	for ( x = 0; x < numParticles[0].amountElectron;x++) {
+	for ( x = 0; x < numParticles[0].amountElectron;x++ ) {
 			
 		if ( electronLocations[x].done == 0 ) {
 				
@@ -125,14 +125,14 @@ void *electron( void *loc ) {
 	}
 	
 	// How do forces apply to each other?
-	while (finished == 0) {
+	while ( finished == 0 ) {
 	
 		types[0] = ELECTRON;
 		types[1] = ELECTRON;
 		
-		for (x = 0;x < numParticles[0].amountElectron;x++) {
+		for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 		
-			if (x == *index) {
+			if ( x == *index ) {
 			
 				continue;
 			
@@ -153,10 +153,13 @@ void *electron( void *loc ) {
 		
 		types[1] = PROTON;
 		
-		for (x = 0;x < numParticles[0].amountProton;x++) {
+		for ( x = 0;x < numParticles[0].amountProton;x++ ) {
 			
 			
 			calculate_force( types, *index, x, &current );
+			
+			printf("\n%.40Lf Newtons", current.force);
+			
 			calculate_acceleration( &current, electronAttributes.mass );
 			calculate_velocity( &current, time - initialTime );
 		
@@ -190,14 +193,19 @@ void *proton( void *loc ) {
 	
 	int *index = (int *)loc;
 	
+	struct movement current = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	struct timespec *hold = ( struct timespec *)malloc( sizeof(struct timespec) );
+	hold[0].tv_sec = 0;
+	hold[0].tv_nsec = 250000000;
 	
-	protonLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	protonLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	protonLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+	
+	protonLocations[*index].x = -.6700000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+	protonLocations[*index].y = .6700000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+	protonLocations[*index].z = .5000000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
 	
 	protonLocations[*index].done = 1;
 	
-	for (x = 0;x < numParticles[0].amountElectron;x++) {
+	for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 		
 		if ( protonLocations[*index].x == electronLocations[x].x &&
 			 protonLocations[*index].y == electronLocations[x].y && 
@@ -213,7 +221,7 @@ void *proton( void *loc ) {
 		
 	}
 		
-	for (x = 0; x < *index;x++) {
+	for ( x = 0; x < *index;x++ ) {
 			
 		if ( protonLocations[*index].x == protonLocations[x].x &&
 			 protonLocations[*index].y == protonLocations[x].y &&
@@ -229,11 +237,34 @@ void *proton( void *loc ) {
 			
 	}
 	
-	/*while (finished == 0) {
-		
-		
+	int types[2];
+	types[0] = ELECTRON;
+	types[1] = PROTON;
 	
-	}*/
+	while (finished == 0) {
+		
+		for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
+			
+			calculate_force( types , *index , x , &current );
+			calculate_acceleration( &current , protonAttributes.mass );
+			calculate_velocity( &current , .1 );
+			
+		
+		}
+		types[1] = PROTON;
+		for ( x = 0;x < numParticles[0].amountProton;x++ ) {
+			
+			calculate_force( types , *index , x , &current );
+			calculate_acceleration( &current , protonAttributes.mass );
+			calculate_velocity( &current , .1 );
+			
+		
+		}
+		types[1] = ELECTRON;
+		
+		nanosleep( hold , NULL );
+	
+	}
 
 	pthread_exit(NULL);
 	
@@ -245,32 +276,43 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 	//Because interaction at the nano level is too quickly to see.
 	long double scale = 25;
 	
-	long double x ,y , z;
+	long double x , y , z;
 	long double distance;
 	
 	
-	if (types[0] == ELECTRON && types[1] == ELECTRON) {
+	if ( types[0] == ELECTRON && types[1] == ELECTRON ) {
 		
 		x = electronLocations[index1].x - electronLocations[index2].x;
 		y = electronLocations[index1].y - electronLocations[index2].y;
 		z = electronLocations[index1].z - electronLocations[index2].z;
 		
-		distance = sqrtl((x*x)+(y*y)+(z*z));
+		distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
 		printf("\n%.40Lf metres", distance);
 		
 		this->force = force_kqqR2( electronAttributes.charge , protonAttributes.charge ,
 									distance * scale);
 	
-	} else if (types[0] == ELECTRON && types[1] == PROTON) {
+	} else if ( types[0] == ELECTRON && types[1] == PROTON ) {
 		
 		x = electronLocations[index1].x - protonLocations[index2].x;
 		y = electronLocations[index1].y - protonLocations[index2].y;
 		z = electronLocations[index1].z - protonLocations[index2].z;
 		
-		distance = sqrtl((x*x)+(y*y)+(z*z));
+		distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
 		this->force = force_kqqR2( electronAttributes.charge , protonAttributes.charge ,
+									distance * scale);
+	
+	} else if ( types[0] == PROTON && types[1] == PROTON ) {
+		
+		x = protonLocations[index1].x - protonLocations[index2].x;
+		y = protonLocations[index1].y - protonLocations[index2].y;
+		z = protonLocations[index1].z - protonLocations[index2].z;
+		
+		distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
+		
+		this->force = force_kqqR2( protonAttributes.charge , protonAttributes.charge ,
 									distance * scale);
 	
 	}
@@ -280,17 +322,13 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 
 void calculate_acceleration( struct movement *this , long double mass ) {
 	
-	this->accelerationX += acceleration_forceMass( this->forceX , mass );
-	this->accelerationY += acceleration_forceMass( this->forceY , mass );
-	this->accelerationZ += acceleration_forceMass( this->forceZ , mass );
+	this->acceleration += acceleration_forceMass( this->force , mass );
 
 
 }
 void calculate_velocity( struct movement *this , long double time ) {
 	
-	this->velocityX += velocity_accelerationTime( this->accelerationX, time );
-	this->velocityY += velocity_accelerationTime( this->accelerationY, time );
-	this->velocityZ += velocity_accelerationTime( this->accelerationZ, time );
+	this->velocity += velocity_accelerationTime( this->acceleration, time );
 	
 }
 
