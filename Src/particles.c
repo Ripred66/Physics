@@ -47,7 +47,7 @@ struct movement {
 	long double acceleration , accelerationX , accelerationY , accelerationZ;
 	long double force , forceX , forceY , forceZ;
 	long double displacementX , displacementY , displacementZ;
->>>>>>> testing
+>>>>>>>    testing
 
 };
 
@@ -65,6 +65,10 @@ float get_float();
 void calculate_force( int *types , int index1 , int index2 , struct movement *this);
 void calculate_acceleration( struct movement *this, long double mass );
 void calculate_velocity( struct movement *this , long double time );
+
+
+
+
 void calculate_displacement( int *types, int index1 , int index2 , long double time , struct movement *this);
 >>>>>>> testing
 
