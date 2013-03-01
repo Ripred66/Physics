@@ -45,6 +45,8 @@ struct movement {
 
 struct particle electronAttributes;
 struct particle protonAttributes;
+
+float get_float();
 							 
 void calculate_force( int *types , int index1 , int index2 , struct movement *this);
 void calculate_acceleration( struct movement *this, long double mass );
@@ -72,9 +74,9 @@ void *electron( void *loc ) {
 	hold[0].tv_sec = 0;
 	hold[0].tv_nsec = 250000000;
 	
-	electronLocations[*index].x = .5000000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	electronLocations[*index].y = .5000000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	electronLocations[*index].z = .5000000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+	electronLocations[*index].x = .5000000; //get_float() - get_float();
+	electronLocations[*index].y = .5000000; //get_float() - get_float();
+	electronLocations[*index].z = .5000000; //get_float() - get_float();
 	
 	//Justs checks to see if no electron is holding the same position.
 	//The new location is based on probability that it won't be there again.
@@ -84,9 +86,9 @@ void *electron( void *loc ) {
 			 electronLocations[*index].y == electronLocations[x].y &&
 			 electronLocations[*index].z == electronLocations[x].z ) {
 					
-			electronLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-			electronLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-			electronLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+			electronLocations[*index].x = get_float() - get_float();
+			electronLocations[*index].y = get_float() - get_float();
+			electronLocations[*index].z = get_float() - get_float();
 				
 			x = 0;
 				
@@ -199,9 +201,9 @@ void *proton( void *loc ) {
 	hold[0].tv_nsec = 250000000;
 	
 	
-	protonLocations[*index].x = -.6700000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	protonLocations[*index].y = .6700000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	protonLocations[*index].z = .5000000; //(float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+	protonLocations[*index].x = -.6700000; //get_float() - get_float();
+	protonLocations[*index].y = .6700000; //get_float() - get_float();
+	protonLocations[*index].z = .5000000; //get_float() - get_float();
 	
 	protonLocations[*index].done = 1;
 	
@@ -211,9 +213,9 @@ void *proton( void *loc ) {
 			 protonLocations[*index].y == electronLocations[x].y && 
 			 protonLocations[*index].z == electronLocations[x].z) {
 				 
-				protonLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				protonLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				protonLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+				protonLocations[*index].x = get_float() - get_float();
+				protonLocations[*index].y = get_float() - get_float();
+				protonLocations[*index].z = get_float() - get_float();
 				
 				x = 0;
 		
@@ -227,9 +229,9 @@ void *proton( void *loc ) {
 			 protonLocations[*index].y == protonLocations[x].y &&
 			 protonLocations[*index].z == protonLocations[x].z) {
 					 
-				protonLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				protonLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				protonLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
+				protonLocations[*index].x = get_float() - get_float();
+				protonLocations[*index].y = get_float() - get_float();
+				protonLocations[*index].z = get_float() - get_float();
 					
 				x = 0;
 				 
@@ -268,6 +270,12 @@ void *proton( void *loc ) {
 
 	pthread_exit(NULL);
 	
+}
+
+float get_float() {
+	
+	return (float)rand()/(float)RAND_MAX;
+
 }
 
 void calculate_force( int *types , int index1 , int index2 ,  struct movement *this ) {
