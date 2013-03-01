@@ -35,50 +35,27 @@ struct particle {
 };
 struct movement {
 	
-<<<<<<< HEAD
-	long double velocityX, velocityY, velocityZ;
-	long double initialVelocityX, initialVelocityY, initialVelocityZ;
-	long double accelerationX, accelerationY, accelerationZ;
-	long double forceX, forceY, forceZ;
-	long double displacementX, displacementY, displacementZ;
-=======
 	long double velocity , velocityX , velocityY , velocityZ;
 	long double initialVelocityX , initialVelocityY , initialVelocityZ;
 	long double acceleration , accelerationX , accelerationY , accelerationZ;
 	long double force , forceX , forceY , forceZ;
 	long double displacementX , displacementY , displacementZ;
->>>>>>>    testing
 
 };
 
 struct particle electronAttributes;
 struct particle protonAttributes;
 
-<<<<<<< HEAD
-void calculate_displacement( int *types, long double time , struct movement *this);
-							 
-void calculate_velocity( struct movement *cords );
-void calculate_force( int *types , int index1 , int index2 , struct movement *this);
-=======
 float get_float();
 							 
 void calculate_force( int *types , int index1 , int index2 , struct movement *this);
 void calculate_acceleration( struct movement *this, long double mass );
 void calculate_velocity( struct movement *this , long double time );
-
-
-
-
 void calculate_displacement( int *types, int index1 , int index2 , long double time , struct movement *this);
->>>>>>> testing
 
 void init_particle_constants() {
 	
 	electronAttributes.mass = 9.10938188e-31;
-<<<<<<< HEAD
-	//printf("%.39Lf", electronAttributes.mass);
-=======
->>>>>>> testing
 	electronAttributes.charge = -1.60217646e-19;
 	
 	protonAttributes.mass = 1.67262158e-27;
@@ -91,42 +68,12 @@ void *electron( void *loc ) {
 	int x = 0;
 	
 	int *index = (int *)loc;
-<<<<<<< HEAD
-	struct movement current = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-=======
 	struct movement current = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
->>>>>>> testing
 	
 	struct timespec *hold = ( struct timespec *)malloc( sizeof(struct timespec) );
 	hold[0].tv_sec = 0;
 	hold[0].tv_nsec = 250000000;
 	
-<<<<<<< HEAD
-	electronLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	electronLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	electronLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	
-	//Justs checks to see if no electron is holding the same position.
-	//The new location is based on probability that it won't be there again.
-	if (  *index != 0 ) {
-		
-		for ( x = 0;x < *index; x++) {
-			
-			if (electronLocations[*index].x == electronLocations[x].x && 
-			electronLocations[*index].y == electronLocations[x].y &&
-			electronLocations[*index].z == electronLocations[x].z) {
-					
-				electronLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				electronLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				electronLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				
-				x = 0;
-				
-			}
-		
-		}
-	
-=======
 	electronLocations[*index].x = .5000000; //get_float() - get_float();
 	electronLocations[*index].y = .5000000; //get_float() - get_float();
 	electronLocations[*index].z = .5000000; //get_float() - get_float();
@@ -147,32 +94,16 @@ void *electron( void *loc ) {
 				
 		}
 		
->>>>>>> testing
 	}
 	
 	electronLocations[*index].done = 1;
 	
-<<<<<<< HEAD
-=======
 	
 	//Math can only be done two numbers at a time.
->>>>>>> testing
 	int types[2];
 	
 	long double time = 0.100000000000000;
 	long double initialTime = time;
-<<<<<<< HEAD
-	
-	// How do forces apply to each other?
-	while (finished == 0) {
-	
-		types[0] = ELECTRON;
-		types[1] = PROTON;
-		
-		for (x = 0;x < numParticles[0].amountElectron;x++) {
-		
-			if (x == *index) {
-=======
 		
 	
 	//checks to see if the system is ready.
@@ -204,29 +135,12 @@ void *electron( void *loc ) {
 		for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 		
 			if ( x == *index ) {
->>>>>>> testing
 			
 				continue;
 			
 			} else {
 				
 				
-<<<<<<< HEAD
-				calculate_force(types, *index, x , &current);
-									
-				current.accelerationX += acceleration_forceMass( current.forceX, electronAttributes.mass ) - current.accelerationX;
-				current.accelerationY += acceleration_forceMass( current.forceY, electronAttributes.mass ) - current.accelerationY;
-				current.accelerationZ += acceleration_forceMass( current.forceZ, electronAttributes.mass ) - current.accelerationZ;
-				
-				current.velocityX += velocity_accelerationTime( current.accelerationX , time - initialTime ) - current.velocityX;
-				current.velocityY += velocity_accelerationTime( current.accelerationY , time - initialTime ) - current.velocityY;
-				current.velocityZ += velocity_accelerationTime( current.accelerationZ , time - initialTime ) - current.velocityZ;
-			
-				calculate_displacement( types , time - initialTime , &current );
-			
-			}
-			
-=======
 				calculate_force( types , *index, x , &current );
 				
 				printf("\n%.40Lf Newtons", current.force);
@@ -236,40 +150,10 @@ void *electron( void *loc ) {
 				calculate_displacement( types , *index , x , time - initialTime , &current );
 			
 			}
->>>>>>> testing
 		
 		}
 		
 		types[1] = PROTON;
-<<<<<<< HEAD
-		for (x = 0;x < numParticles[0].amountProton;x++) {
-			
-			
-				calculate_force( types, *index, x, &current );
-									
-				current.accelerationX += acceleration_forceMass( current.forceX, electronAttributes.mass ) - current.accelerationX;
-				current.accelerationY += acceleration_forceMass( current.forceY, electronAttributes.mass ) - current.accelerationY;
-				current.accelerationZ += acceleration_forceMass( current.forceZ, electronAttributes.mass ) - current.accelerationZ;
-				
-				current.velocityX += velocity_accelerationTime( current.accelerationX , time - initialTime ) - current.velocityX;
-				current.velocityY += velocity_accelerationTime( current.accelerationY , time - initialTime ) - current.velocityY;
-				current.velocityZ += velocity_accelerationTime( current.accelerationZ , time - initialTime ) - current.velocityZ;
-				
-				//displacementX += -metres_velocityTime( current.velocityX, time - initialTime );
-				//displacementY += -metres_velocityTime( current.velocityY, time - initialTime );
-				//displacementZ += -metres_velocityTime( current.velocityZ, time - initialTime );
-				
-		
-		}
-		
-		electronLocations[*index].x = current.displacementX;
-		electronLocations[*index].y = current.displacementY;
-		electronLocations[*index].z = current.displacementZ;
-		
-		printf("\n%d x = %f", *index, electronLocations[*index].x);
-		printf("\n%d y = %f", *index, electronLocations[*index].y);
-		printf("\n%d z = %f", *index, electronLocations[*index].z);
-=======
 		
 		for ( x = 0;x < numParticles[0].amountProton;x++ ) {
 			
@@ -292,7 +176,6 @@ void *electron( void *loc ) {
 		/*printf("\n%d x = %f", *index, electronLocations[*index].x);
 		printf("\n%d y = %f", *index, electronLocations[*index].y);
 		printf("\n%d z = %f", *index, electronLocations[*index].z);*/
->>>>>>> testing
 		
 		initialTime = time;
 		time += 0.100000000000000;
@@ -312,16 +195,6 @@ void *proton( void *loc ) {
 	
 	int *index = (int *)loc;
 	
-<<<<<<< HEAD
-	
-	protonLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	protonLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	protonLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-	
-	protonLocations[*index].done = 1;
-	
-	for (x = 0;x < numParticles[0].amountElectron;x++) {
-=======
 	struct movement current = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	struct timespec *hold = ( struct timespec *)malloc( sizeof(struct timespec) );
 	hold[0].tv_sec = 0;
@@ -335,55 +208,20 @@ void *proton( void *loc ) {
 	protonLocations[*index].done = 1;
 	
 	for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
->>>>>>> testing
 		
 		if ( protonLocations[*index].x == electronLocations[x].x &&
 			 protonLocations[*index].y == electronLocations[x].y && 
 			 protonLocations[*index].z == electronLocations[x].z) {
 				 
-<<<<<<< HEAD
-				protonLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				protonLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-				protonLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-=======
 				protonLocations[*index].x = get_float() - get_float();
 				protonLocations[*index].y = get_float() - get_float();
 				protonLocations[*index].z = get_float() - get_float();
->>>>>>> testing
 				
 				x = 0;
 		
 		}
 		
 	}
-<<<<<<< HEAD
-	
-	if ( *index != 0 ) {
-		
-		for (x = 0; x < *index;x++) {
-			
-			if ( protonLocations[*index].x == protonLocations[x].x &&
-				 protonLocations[*index].y == protonLocations[x].y &&
-				 protonLocations[*index].z == protonLocations[x].z) {
-					 
-					protonLocations[*index].x = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-					protonLocations[*index].y = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-					protonLocations[*index].z = (float)rand()/(float)RAND_MAX - (float)rand()/(float)RAND_MAX;
-					
-					x = 0;
-					 
-			}
-			
-		}
-		
-	}
-	
-	/*while (finished == 0) {
-		
-		
-	
-	}*/
-=======
 		
 	for ( x = 0; x < *index;x++ ) {
 			
@@ -429,60 +267,11 @@ void *proton( void *loc ) {
 		nanosleep( hold , NULL );
 	
 	}
->>>>>>> testing
 
 	pthread_exit(NULL);
 	
 }
 
-<<<<<<< HEAD
-void calculate_displacement( int *types , long double time , struct movement *this ) {
-	
-	if ( types[0] == ELECTRON && types[1] == ELECTRON ) {
-		
-		//metres_velocityTime( this-> );
-	
-	} else if ( types[0] == ELECTRON && types[1] == PROTON ) {
-		
-	
-	
-	}
-	
-}
-void calculate_force( int *types , int index1 , int index2 ,  struct movement *this ) {
-	
-	
-	long double scale = 25;
-	
-	
-	// I realize you cannot determine a particle's attributes just solely on charge. I'll change it later.
-	if (types[0] == ELECTRON && types[1] == ELECTRON) {
-		
-		
-		this->forceX += force_kqqR2( electronAttributes.charge , electronAttributes.charge , 
-									(electronLocations[index1].x - electronLocations[index2].x) * scale ) - this->forceX;
-									 
-		this->forceY += force_kqqR2( electronAttributes.charge , electronAttributes.charge ,
-									(electronLocations[index1].y - electronLocations[index2].y) * scale ) - this->forceY;
-									
-		this->forceZ += force_kqqR2( electronAttributes.charge, electronAttributes.charge ,
-									(electronLocations[index1].z - electronLocations[index2].z) * scale ) - this->forceZ;
-	
-	} else if (types[0] == ELECTRON && types[1] == PROTON) {
-		
-		this->forceX += force_kqqR2( electronAttributes.charge , protonAttributes.charge , 
-									(electronLocations[index1].x - protonLocations[index2].x) * scale ) - this->forceX;
-									 
-		this->forceY += force_kqqR2( electronAttributes.charge , protonAttributes.charge ,
-									(electronLocations[index1].y - protonLocations[index2].y) * scale ) - this->forceY;
-									
-		this->forceZ += force_kqqR2( electronAttributes.charge, protonAttributes.charge ,
-									(electronLocations[index1].z - protonLocations[index2].z) * scale ) - this->forceZ;
-	
-	}
-	
-
-=======
 float get_float() {
 	
 	return (float)rand()/(float)RAND_MAX;
@@ -578,5 +367,4 @@ void calculate_displacement( int *types , int index1 , int index2 , long double 
 	
 	}
 	
->>>>>>> testing
 }
