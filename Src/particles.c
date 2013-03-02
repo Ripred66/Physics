@@ -277,7 +277,7 @@ void check_system() {
 	//checks to see if the system is ready.
 	for ( x = 0; x < numParticles[0].amountElectron;x++ ) {
 			
-		if ( electronLocations[x].done == 0 ) {
+		if ( electronLocations[x].done == 1 ) {
 				
 			x--;
 			
@@ -286,7 +286,7 @@ void check_system() {
 	}
 	for ( x = 0;x < numParticles[0].amountProton; x++ ) {
 		
-		if ( protonLocations[x].done == 0 ) {
+		if ( protonLocations[x].done == 1 ) {
 		
 			x--;
 			
