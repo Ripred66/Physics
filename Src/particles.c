@@ -254,11 +254,20 @@ void *proton( void *loc ) {
 		
 		}
 		types[1] = PROTON;
+		
 		for ( x = 0;x < numParticles[0].amountProton;x++ ) {
 			
-			calculate_force( types , *index , x , &current );
-			calculate_acceleration( &current , protonAttributes.mass );
-			calculate_velocity( &current , .1 );
+			if ( x == *index ) {
+				
+				continue;
+			
+			} else {
+			
+				calculate_force( types , *index , x , &current );
+				calculate_acceleration( &current , protonAttributes.mass );
+				calculate_velocity( &current , .1 );
+				
+			}
 			
 		
 		}
