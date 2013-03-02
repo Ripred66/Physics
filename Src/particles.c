@@ -51,8 +51,8 @@ float get_float();
 void check_system();
 							 
 void calculate_force( int *types , int index1 , int index2 , struct movement *this);
-void calculate_acceleration( struct movement *this, long double mass );
-void calculate_velocity( struct movement *this , long double time );
+void calculate_acceleration( long double mass , struct movement *this );
+void calculate_velocity( long double time , struct movement *this );
 void calculate_displacement( int *types, int index1 , int index2 , long double time , struct movement *this);
 
 void init_particle_constants() {
@@ -126,8 +126,8 @@ void *electron( void *loc ) {
 				
 				printf("\n%.40Lf Newtons", current.force);
 				
-				calculate_acceleration( &current, electronAttributes.mass );
-				calculate_velocity( &current, time - initialTime );					
+				calculate_acceleration( electronAttributes.mass , &current );
+				calculate_velocity( time - initialTime , &current );					
 				calculate_displacement( types , *index , x , time - initialTime , &current );
 			
 			}
@@ -143,8 +143,8 @@ void *electron( void *loc ) {
 			
 			printf("\n%.40Lf Newtons", current.force);
 			
-			calculate_acceleration( &current, electronAttributes.mass );
-			calculate_velocity( &current, time - initialTime );
+			calculate_acceleration( electronAttributes.mass , &current );
+			calculate_velocity( time - initialTime , &current );
 		
 		}
 		
@@ -231,8 +231,8 @@ void *proton( void *loc ) {
 		for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 			
 			calculate_force( types , *index , x , &current );
-			calculate_acceleration( &current , protonAttributes.mass );
-			calculate_velocity( &current , .1 );
+			calculate_acceleration( protonAttributes.mass , &current );
+			calculate_velocity( .1 , &current );
 			
 		
 		}
@@ -247,8 +247,8 @@ void *proton( void *loc ) {
 			} else {
 			
 				calculate_force( types , *index , x , &current );
-				calculate_acceleration( &current , protonAttributes.mass );
-				calculate_velocity( &current , .1 );
+				calculate_acceleration( protonAttributes.mass , &current );
+				calculate_velocity( .1 , &current );
 				
 			}
 			
@@ -346,13 +346,13 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 
 }
 
-void calculate_acceleration( struct movement *this , long double mass ) {
+void calculate_acceleration( long double mass , struct movement *this ) {
 	
 	this->acceleration += acceleration_forceMass( this->force , mass );
 
 
 }
-void calculate_velocity( struct movement *this , long double time ) {
+void calculate_velocity( long double time , struct movement *this ) {
 	
 	this->velocity += velocity_accelerationTime( this->acceleration, time );
 	
