@@ -1,8 +1,8 @@
-OBJS = main.o particles.o constants.o newtonian.o elements.o electric.o
+OBJS = main.o particles.o constants.o newtonian.o elements.o electric.o systemtime.o
 CC = gcc
 DEBUG = -g
 CFLAGS = -Wall -O3 -c -march=native $(DEBUG)
-LFLAGS = -Wall -lpthread -lGL -LGLU -lglut $(DEBUG)
+LFLAGS = -Wall -lpthread -lGL -LGLU -lglut -lm $(DEBUG)
 
 physics : $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o physics
@@ -24,6 +24,9 @@ elements.o : elements.h elements.c
 
 electric.o : electric.h electric.c constants.h
 	$(CC) $(CFLAGS) electric.c
+
+systemtime.o : systemtime.h systemtime.c
+	$(CC) $(CFLAGS) systemtime.c
 	
 clean :
 	\rm *.o physics
