@@ -24,4 +24,29 @@
 
 #include "systemtime.h"
 
+long double systemTime;
 
+void *system_clock( void *n ) {
+	
+	systemTime = 0.00000000000000000000;
+	
+	struct timespec *time = ( struct timespec * )malloc( sizeof ( struct timespec ) );
+	time[0].tv_sec = 0;
+	time[0].tv_nsec = 1000000;
+	
+	while ( systemFinished == 0 ) {
+		
+		nanosleep( time, NULL );
+		systemTime += 0.00100000000000000000;
+	
+	}
+
+	pthread_exit(EXIT_SUCCESS);
+
+}
+
+long double get_system_time() {
+	
+	return systemTime;
+
+}

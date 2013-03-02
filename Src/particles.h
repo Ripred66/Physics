@@ -31,6 +31,7 @@
 #include <pthread.h>
 
 #include "constants.h"
+#include "systemtime.h"
 #include "electric.h"
 #include "newtonian.h"
 
@@ -45,8 +46,6 @@ struct amount {
 	int amountElectron, amountProton, amountNeutron;
 	
 };
-
-int finished;
 
 struct location *electronLocations;
 struct location *protonLocations;

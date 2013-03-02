@@ -108,7 +108,7 @@ void *electron( void *loc ) {
 	long double initialTime = time;
 	
 	// How do forces apply to each other?
-	while ( finished == 0 ) {
+	while ( systemFinished == 0 ) {
 	
 		types[0] = ELECTRON;
 		types[1] = ELECTRON;
@@ -165,7 +165,7 @@ void *electron( void *loc ) {
 	}
 	
 	
-	pthread_exit(NULL);
+	pthread_exit(EXIT_SUCCESS);
 	
 }
 
@@ -226,7 +226,7 @@ void *proton( void *loc ) {
 	types[0] = ELECTRON;
 	types[1] = PROTON;
 	
-	while (finished == 0) {
+	while ( systemFinished == 0 ) {
 		
 		for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 			
@@ -260,7 +260,7 @@ void *proton( void *loc ) {
 	
 	}
 
-	pthread_exit(NULL);
+	pthread_exit(EXIT_SUCCESS);
 	
 }
 
@@ -300,7 +300,7 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 	
 	
 	//Because interaction at the nano level is too quickly to see.
-	long double scale = 25;
+	long double scale = 50;
 	
 	long double x , y , z;
 	long double distance;
@@ -369,12 +369,12 @@ void calculate_displacement( int *types , int index1 , int index2 , long double 
 		}
 		if ( electronLocations[index1].y > electronLocations[index2].x ) {
 			
-			this->displacementX += metres_velocityTime( this->velocityX, time );
+			this->displacementY += metres_velocityTime( this->velocityX, time );
 		
 		}
 		if (electronLocations[index1].z > electronLocations[index2].z ) {
 			
-			this->displacementX += metres_velocityTime( this->velocityX, time );
+			this->displacementZ += metres_velocityTime( this->velocityX, time );
 		
 		}
 		

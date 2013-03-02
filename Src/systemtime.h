@@ -25,7 +25,14 @@
 #ifndef	SYSTEMTIME_H
 #define	SYSTEMTIME_H
 
+#include <time.h>
+#include <stdlib.h>
+#include <pthread.h>
 
+int systemFinished;
+
+void *system_clock( void *n );
+long double get_system_time();
 
 #endif
 

@@ -31,6 +31,7 @@
 
 #include "particles.h"
 #include "constants.h"
+#include "systemtime.h"
 
 void set_mode();
 void runloop(int x);
@@ -76,7 +77,7 @@ int main(int argc, char **argv)
 	glutTimerFunc( fps, runloop, 0 );
 	glutMainLoop();
 	
-	finished = 1;
+	systemFinished = 1;
 	
 	pthread_join(secondary, NULL);
 	
@@ -166,6 +167,7 @@ void *constructor(void *n) {
 	
 	pthread_t electronThread[numElectron];
 	pthread_t protonThread[numProton];
+	pthread_t systemThread;
 	
 	//Holds the Index value of the current particle
 	int *electronIndex = ( int * )malloc( numElectron * sizeof(int) );
@@ -181,7 +183,7 @@ void *constructor(void *n) {
 	constants = ( struct data * )malloc( sizeof(struct data) );
 	
 	//Finished is the variable each thread look at to keep them running.
-	finished = 0;
+	systemFinished = 0;
 	numParticles[0].amountElectron = numElectron;
 	numParticles[0].amountProton = numProton;
 	numParticles[0].amountNeutron = numNeutron;
@@ -189,6 +191,7 @@ void *constructor(void *n) {
 	init_constants();
 	init_particle_constants();
 	
+	pthread_create( &systemThread, NULL, system_clock, ( void *)0 );
 	for (x = 0; x < numElectron; x++) {
 		
 		electronIndex[x] = x;
@@ -228,14 +231,15 @@ void *constructor(void *n) {
 		pthread_join(protonThread[x], NULL);
 		
 	}
+	pthread_join( systemThread, NULL );
 	
-	free(hold);
-	free(electronIndex);
-	free(protonIndex);
-	free(numParticles);
-	free(electronLocations);
-	free(protonLocations);
-	free(constants);
+	free( hold );
+	free( electronIndex );
+	free( protonIndex );
+	free( numParticles );
+	free( electronLocations );
+	free( protonLocations );
+	free( constants );
 	
 	
 	pthread_exit(EXIT_SUCCESS);
