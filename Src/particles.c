@@ -47,6 +47,8 @@ struct particle electronAttributes;
 struct particle protonAttributes;
 
 float get_float();
+
+void check_system();
 							 
 void calculate_force( int *types , int index1 , int index2 , struct movement *this);
 void calculate_acceleration( struct movement *this, long double mass );
@@ -70,7 +72,7 @@ void *electron( void *loc ) {
 	int *index = (int *)loc;
 	struct movement current = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	
-	struct timespec *hold = ( struct timespec *)malloc( sizeof(struct timespec) );
+	struct timespec *hold = ( struct timespec *)malloc( sizeof( struct timespec ) );
 	hold[0].tv_sec = 0;
 	hold[0].tv_nsec = 250000000;
 	
@@ -97,34 +99,13 @@ void *electron( void *loc ) {
 	}
 	
 	electronLocations[*index].done = 1;
-	
+	check_system();
 	
 	//Math can only be done two numbers at a time.
 	int types[2];
 	
 	long double time = 0.100000000000000;
 	long double initialTime = time;
-		
-	
-	//checks to see if the system is ready.
-	for ( x = 0; x < numParticles[0].amountElectron;x++ ) {
-			
-		if ( electronLocations[x].done == 0 ) {
-				
-			x--;
-			
-		}
-		
-	}
-	for ( x = 0;x < numParticles[0].amountProton; x++ ) {
-		
-		if ( protonLocations[x].done == 0 ) {
-		
-			x--;
-			
-		}
-	
-	}
 	
 	// How do forces apply to each other?
 	while ( finished == 0 ) {
@@ -196,7 +177,7 @@ void *proton( void *loc ) {
 	int *index = (int *)loc;
 	
 	struct movement current = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	struct timespec *hold = ( struct timespec *)malloc( sizeof(struct timespec) );
+	struct timespec *hold = ( struct timespec *)malloc( sizeof( struct timespec ) );
 	hold[0].tv_sec = 0;
 	hold[0].tv_nsec = 250000000;
 	
@@ -204,8 +185,6 @@ void *proton( void *loc ) {
 	protonLocations[*index].x = -.6700000; //get_float() - get_float();
 	protonLocations[*index].y = .6700000; //get_float() - get_float();
 	protonLocations[*index].z = .5000000; //get_float() - get_float();
-	
-	protonLocations[*index].done = 1;
 	
 	for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 		
@@ -238,6 +217,10 @@ void *proton( void *loc ) {
 		}
 			
 	}
+	
+	protonLocations[*index].done = 1;
+	
+	check_system();
 	
 	int types[2];
 	types[0] = ELECTRON;
@@ -285,6 +268,32 @@ float get_float() {
 	
 	return (float)rand()/(float)RAND_MAX;
 
+}
+
+void check_system() {
+	
+	int x;
+	
+	//checks to see if the system is ready.
+	for ( x = 0; x < numParticles[0].amountElectron;x++ ) {
+			
+		if ( electronLocations[x].done == 0 ) {
+				
+			x--;
+			
+		}
+		
+	}
+	for ( x = 0;x < numParticles[0].amountProton; x++ ) {
+		
+		if ( protonLocations[x].done == 0 ) {
+		
+			x--;
+			
+		}
+	
+	}
+	
 }
 
 void calculate_force( int *types , int index1 , int index2 ,  struct movement *this ) {
