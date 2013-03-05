@@ -318,8 +318,8 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 		
 		distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
-		this->force = force_kqqR2( electronAttributes.charge , electronAttributes.charge ,
-									distance * scale);
+		this->force += force_kqqR2( electronAttributes.charge , electronAttributes.charge ,
+									distance * scale) - this->force;
 	
 	} else if ( types[0] == ELECTRON && types[1] == PROTON ) {
 		
@@ -329,8 +329,8 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 		
 		distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
-		this->force = force_kqqR2( electronAttributes.charge , protonAttributes.charge ,
-									distance * scale);
+		this->force += force_kqqR2( electronAttributes.charge , protonAttributes.charge ,
+									distance * scale) - this->force;
 	
 	} else if ( types[0] == PROTON && types[1] == PROTON ) {
 		
@@ -340,8 +340,8 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 		
 		distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
-		this->force = force_kqqR2( protonAttributes.charge , protonAttributes.charge ,
-									distance * scale);
+		this->force += force_kqqR2( protonAttributes.charge , protonAttributes.charge ,
+									distance * scale) - this->force;
 	
 	}
 	
@@ -350,12 +350,12 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 
 void calculate_acceleration( long double mass , struct movement *this ) {
 	
-	this->acceleration += acceleration_forceMass( this->force , mass );
+	this->acceleration += acceleration_forceMass( this->force , mass ) - this->acceleration;
 
 }
 void calculate_velocity( long double time , struct movement *this ) {
 	
-	this->velocity += velocity_accelerationTime( this->acceleration, time );
+	this->velocity += velocity_accelerationTime( this->acceleration, time ) - this->velocity;
 	
 }
 
