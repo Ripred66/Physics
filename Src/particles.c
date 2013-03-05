@@ -320,7 +320,7 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 		
 		printf("\n%.40Lf metres", distance);
 		
-		this->force = force_kqqR2( electronAttributes.charge , protonAttributes.charge ,
+		this->force = force_kqqR2( electronAttributes.charge , electronAttributes.charge ,
 									distance * scale);
 	
 	} else if ( types[0] == ELECTRON && types[1] == PROTON ) {
