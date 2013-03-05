@@ -104,7 +104,7 @@ void *electron( void *loc ) {
 	//Math can only be done two numbers at a time.
 	int types[2];
 	
-	long double time = 0.100000000000000;
+	long double time = get_system_time();
 	long double initialTime = time;
 	
 	// How do forces apply to each other?
@@ -159,7 +159,7 @@ void *electron( void *loc ) {
 		printf("\n%d z = %f", *index, electronLocations[*index].z);*/
 		
 		initialTime = time;
-		time += 0.100000000000000;
+		time += get_system_time();
 		nanosleep( hold, NULL );
 	
 	}
@@ -226,13 +226,16 @@ void *proton( void *loc ) {
 	types[0] = ELECTRON;
 	types[1] = PROTON;
 	
+	long double time = get_system_time(); 
+	long double initialTime = time;
+	
 	while ( systemFinished == 0 ) {
 		
 		for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 			
 			calculate_force( types , *index , x , &current );
 			calculate_acceleration( protonAttributes.mass , &current );
-			calculate_velocity( .1 , &current );
+			calculate_velocity( time - initialTime , &current );
 			
 		
 		}
@@ -248,13 +251,15 @@ void *proton( void *loc ) {
 			
 				calculate_force( types , *index , x , &current );
 				calculate_acceleration( protonAttributes.mass , &current );
-				calculate_velocity( .1 , &current );
+				calculate_velocity( time - initialTime , &current );
 				
 			}
 			
-		
 		}
 		types[1] = ELECTRON;
+		
+		initialTime = time;
+		time += get_system_time();
 		
 		nanosleep( hold , NULL );
 	
@@ -349,7 +354,6 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 void calculate_acceleration( long double mass , struct movement *this ) {
 	
 	this->acceleration += acceleration_forceMass( this->force , mass );
-
 
 }
 void calculate_velocity( long double time , struct movement *this ) {
