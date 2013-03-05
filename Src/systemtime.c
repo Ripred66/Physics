@@ -1,11 +1,11 @@
 /*
- * particles.c
+ * systemtime.c
  * 
  * Copyright 2013 Michael Davenport <mike3214545@gmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful,
@@ -21,42 +21,32 @@
  * 
  */
 
-#ifndef	PARTICLES_H
-#define	PARTICLES_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#include <pthread.h>
-
-#include "constants.h"
 #include "systemtime.h"
-#include "electric.h"
-#include "newtonian.h"
 
-struct location {
+long double systemTime;
+
+void *system_clock( void *n ) {
 	
-	float x, y, z;
-	int done;
+	systemTime = 0.00000000000000000000;
 	
-};
-struct amount {
+	struct timespec *time = ( struct timespec * )malloc( sizeof ( struct timespec ) );
+	time[0].tv_sec = 0;
+	time[0].tv_nsec = 1000000;
 	
-	int amountElectron, amountProton, amountNeutron;
+	while ( systemFinished == 0 ) {
+		
+		nanosleep( time, NULL );
+		systemTime += 0.00100000000000000000;
 	
-};
+	}
 
-struct location *electronLocations;
-struct location *protonLocations;
-struct location *neutronLocations;
+	pthread_exit(EXIT_SUCCESS);
 
-struct amount *numParticles;
+}
 
-void init_particle_constants();
+long double get_system_time() {
+	
+	return systemTime;
 
-void *proton( void * );
-void *electron( void * );
-void *nuetron( void * );
-
-#endif
+}
