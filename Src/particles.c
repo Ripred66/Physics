@@ -103,6 +103,7 @@ void *electron( void *loc ) {
 	
 	//Math can only be done two numbers at a time.
 	int types[2];
+	types[0] = ELECTRON;
 	
 	long double time = get_system_time();
 	long double initialTime = time;
@@ -110,17 +111,15 @@ void *electron( void *loc ) {
 	// How do forces apply to each other?
 	while ( systemFinished == 0 ) {
 	
-		types[0] = ELECTRON;
 		types[1] = ELECTRON;
 		
 		for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 		
 			if ( x == *index ) {
-			
+				
 				continue;
 			
 			} else {
-				
 				
 				calculate_force( types , *index, x , &current );
 				
@@ -219,17 +218,18 @@ void *proton( void *loc ) {
 	}
 	
 	protonLocations[*index].done = 1;
-	
 	check_system();
 	
 	int types[2];
-	types[0] = ELECTRON;
 	types[1] = PROTON;
+	
 	
 	long double time = get_system_time(); 
 	long double initialTime = time;
 	
 	while ( systemFinished == 0 ) {
+		
+		types[0] = ELECTRON;
 		
 		for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 			
@@ -239,7 +239,7 @@ void *proton( void *loc ) {
 			
 		
 		}
-		types[1] = PROTON;
+		types[0] = PROTON;
 		
 		for ( x = 0;x < numParticles[0].amountProton;x++ ) {
 			
@@ -256,7 +256,6 @@ void *proton( void *loc ) {
 			}
 			
 		}
-		types[1] = ELECTRON;
 		
 		initialTime = time;
 		time += get_system_time();
@@ -279,10 +278,10 @@ void check_system() {
 	
 	int x;
 	
-	//checks to see if the system is ready.
+	//checks to see if the system is ready. If done == 0, particle is not ready.
 	for ( x = 0; x < numParticles[0].amountElectron;x++ ) {
 			
-		if ( electronLocations[x].done == 1 ) {
+		if ( electronLocations[x].done == 0 ) {
 				
 			x--;
 			
@@ -291,7 +290,7 @@ void check_system() {
 	}
 	for ( x = 0;x < numParticles[0].amountProton; x++ ) {
 		
-		if ( protonLocations[x].done == 1 ) {
+		if ( protonLocations[x].done == 0 ) {
 		
 			x--;
 			
@@ -354,6 +353,16 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 void calculate_acceleration( long double mass , struct movement *this ) {
 	
 	this->acceleration += acceleration_forceMass( this->force , mass );
+	
+	if (this->acceleration > 0) {
+	
+		printf("\nThe particles are the same");
+		
+	} else {
+	
+		printf("\nThe particles are different");
+		
+	}
 
 }
 void calculate_velocity( long double time , struct movement *this ) {
