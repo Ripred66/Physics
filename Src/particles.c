@@ -52,8 +52,9 @@ void check_system();
 							 
 void calculate_force( int *types , int index1 , int index2 , struct movement *this);
 void calculate_acceleration( long double mass , struct movement *this );
-void calculate_velocity( long double time , struct movement *this );
+void calculate_velocity( int *types, int index1, int index2 , long double time , struct movement *this );
 void calculate_displacement( int *types, int index1 , int index2 , long double time , struct movement *this);
+void calculate_components(long double x, long double y, long double z, struct movement *this, int type);
 
 void init_particle_constants() {
 	
@@ -123,7 +124,7 @@ void *electron( void *loc ) {
 				
 				calculate_force( types , *index, x , &current );
 				calculate_acceleration( electronAttributes.mass , &current );
-				calculate_velocity( time - initialTime , &current );					
+				calculate_velocity(types, *index , x ,  time - initialTime , &current );					
 				calculate_displacement( types , *index , x , time - initialTime , &current );
 			
 			}
@@ -139,7 +140,7 @@ void *electron( void *loc ) {
 			printf("\nE->%.40Lf Newtons", current.force);
 			calculate_acceleration( electronAttributes.mass , &current );
 			printf("\nE->%.40Lf m/s^2 " , current.acceleration);
-			calculate_velocity( time - initialTime , &current );
+			calculate_velocity( types , *index, x , time - initialTime , &current );
 			printf("\nE->%.60Lf m/s \n" , current.velocity);
 		
 		}
@@ -234,7 +235,7 @@ void *proton( void *loc ) {
 			printf("\nP->%.40Lf Newtons", current.force);
 			calculate_acceleration( protonAttributes.mass , &current );
 			printf("\nP->%.40Lf m/s^2 " , current.acceleration);
-			calculate_velocity( time - initialTime , &current );
+			calculate_velocity( types , *index , x , time - initialTime , &current );
 			printf("\nP->%.60Lf m/s \n" , current.velocity);
 			
 		
@@ -251,7 +252,7 @@ void *proton( void *loc ) {
 			
 				calculate_force( types , *index , x , &current );
 				calculate_acceleration( protonAttributes.mass , &current );
-				calculate_velocity( time - initialTime , &current );
+				calculate_velocity( types , *index , x , time - initialTime , &current );
 				
 			}
 			
@@ -312,9 +313,13 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 	
 	if ( types[0] == ELECTRON && types[1] == ELECTRON ) {
 		
-		x = electronLocations[index1].x - electronLocations[index2].x;
+		/*x = electronLocations[index1].x - electronLocations[index2].x;
 		y = electronLocations[index1].y - electronLocations[index2].y;
-		z = electronLocations[index1].z - electronLocations[index2].z;
+		z = electronLocations[index1].z - electronLocations[index2].z;*/
+		
+		x = electronLocations[index2].x - electronLocations[index1].x;
+		y = electronLocations[index2].y - electronLocations[index1].y;
+		z = electronLocations[index2].z - electronLocations[index1].z;
 		
 		distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
@@ -323,25 +328,29 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 	
 	} else if ( types[0] == ELECTRON && types[1] == PROTON ) {
 		
-		x = electronLocations[index1].x - protonLocations[index2].x;
-		y = electronLocations[index1].y - protonLocations[index2].y;
-		z = electronLocations[index1].z - protonLocations[index2].z;
+		x = electronLocations[index2].x - protonLocations[index1].x;
+		y = electronLocations[index2].y - protonLocations[index1].y;
+		z = electronLocations[index2].z - protonLocations[index1].z;
+		
 		
 		distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
 		this->force += force_kqqR2( electronAttributes.charge , protonAttributes.charge ,
 									distance * scale) - this->force;
+									 
 	
 	} else if ( types[0] == PROTON && types[1] == PROTON ) {
 		
-		x = protonLocations[index1].x - protonLocations[index2].x;
-		y = protonLocations[index1].y - protonLocations[index2].y;
-		z = protonLocations[index1].z - protonLocations[index2].z;
+		x = protonLocations[index2].x - protonLocations[index1].x;
+		y = protonLocations[index2].y - protonLocations[index1].y;
+		z = protonLocations[index2].z - protonLocations[index1].z;
+		
 		
 		distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
 		this->force += force_kqqR2( protonAttributes.charge , protonAttributes.charge ,
 									distance * scale) - this->force;
+									
 	
 	}
 	
@@ -353,9 +362,33 @@ void calculate_acceleration( long double mass , struct movement *this ) {
 	this->acceleration += acceleration_forceMass( this->force , mass ) - this->acceleration;
 
 }
-void calculate_velocity( long double time , struct movement *this ) {
+void calculate_velocity( int *types , int index1 , int index2 ,  long double time , struct movement *this ) {
+	
+	long double x , y , z;
+	
+	if ( types[0] == ELECTRON && types[1] == ELECTRON ) {
+		
+		x = electronLocations[index2].x - electronLocations[index1].x;
+		y = electronLocations[index2].y - electronLocations[index1].y;
+		z = electronLocations[index2].z - electronLocations[index1].z;
+	
+	} else if ( types[0] == ELECTRON && types[1] == PROTON ) {
+		
+		x = electronLocations[index2].x - protonLocations[index1].x;
+		y = electronLocations[index2].y - protonLocations[index1].y;
+		z = electronLocations[index2].z - protonLocations[index1].z;
+	
+	} else if ( types[0] == PROTON && types[1] == PROTON ) {
+		
+		x = protonLocations[index2].x - protonLocations[index1].x;
+		y = protonLocations[index2].y - protonLocations[index1].y;
+		z = protonLocations[index2].z - protonLocations[index1].z;
+	
+	}
 	
 	this->velocity += velocity_accelerationTime( this->acceleration, time ) - this->velocity;
+	
+	calculate_components( x , y , z , this , 2);
 	
 }
 
@@ -386,4 +419,43 @@ void calculate_displacement( int *types , int index1 , int index2 , long double 
 	
 	}
 	
+	/*this->displacementX += metres_velocityTime( this->velocityX , time );
+	this->displacementY += metres_velocityTime( this->velocityY , time );
+	this->displacementY += metres_velocityTime( this->velocityZ , time );*/
+	
+}
+void calculate_components( long double x , long double y , long double z , struct movement *this , int type ) {
+	
+	long double xytheta = atan( y / x ), yztheta = atan( z / y );
+	
+	switch ( type ) {
+		
+		case 0: 
+		
+			this->forceX += ( this->force * cos( xytheta ) );
+			this->forceY += ( this->force * sin( xytheta ) );
+			this->forceZ += ( this->force * sin( yztheta ) );
+			 
+		break;
+		
+		case 1:
+		
+			this->accelerationX += ( this->acceleration * cos( xytheta ) );
+			this->accelerationY += ( this->acceleration * sin( xytheta ) );
+			this->accelerationZ += ( this->acceleration * sin( yztheta ) );
+		
+		break;
+		
+		case 2:
+		
+			this->velocityX += ( this->velocity * cos( xytheta ) );
+			this->velocityY += ( this->velocity * sin( xytheta ) );
+			this->velocityZ += ( this->velocity * sin( yztheta ) );
+		
+		break;
+	
+	
+	} 
+
+
 }

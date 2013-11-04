@@ -26,7 +26,6 @@
 
 double force_kqqR2(long double q, long double Q, long double distance) {
 	
-	
 	//fabsl = absolute value for long doubles.
 	distance = fabsl(distance);
 	
