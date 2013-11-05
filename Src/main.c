@@ -157,7 +157,6 @@ void keyboard(unsigned char key, int x, int y) {
 
 void *constructor(void *n) {
 	
-	
 	int x;
 	
 	//stops for a tenth of a second.
