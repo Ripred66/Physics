@@ -306,10 +306,6 @@ void calculate_force( int *types , int index1 , int index2 ,  struct movement *t
 	
 	if ( types[0] == ELECTRON && types[1] == ELECTRON ) {
 		
-		/*x = electronLocations[index1].x - electronLocations[index2].x;
-		y = electronLocations[index1].y - electronLocations[index2].y;
-		z = electronLocations[index1].z - electronLocations[index2].z;*/
-		
 		x = electronLocations[index2].x - electronLocations[index1].x;
 		y = electronLocations[index2].y - electronLocations[index1].y;
 		z = electronLocations[index2].z - electronLocations[index1].z;
