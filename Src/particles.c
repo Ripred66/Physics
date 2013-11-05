@@ -35,6 +35,8 @@ struct particle {
 };
 struct movement {
 	
+	int type;
+	
 	long double velocity , velocityX , velocityY , velocityZ;
 	long double initialVelocityX , initialVelocityY , initialVelocityZ;
 	long double acceleration , accelerationX , accelerationY , accelerationZ;
@@ -137,11 +139,8 @@ void *electron( void *loc ) {
 			
 			
 			calculate_force( types, *index, x, &current );
-			printf("\nE->%.40Lf Newtons", current.force);
 			calculate_acceleration( electronAttributes.mass , &current );
-			printf("\nE->%.40Lf m/s^2 " , current.acceleration);
 			calculate_velocity( types , *index, x , time - initialTime , &current );
-			printf("\nE->%.60Lf m/s \n" , current.velocity);
 		
 		}
 		
@@ -150,10 +149,6 @@ void *electron( void *loc ) {
 		electronLocations[*index].x += current.displacementX;
 		electronLocations[*index].y += current.displacementY;
 		electronLocations[*index].z += current.displacementZ;
-		
-		/*printf("\n%d x = %f", *index, electronLocations[*index].x);
-		printf("\n%d y = %f", *index, electronLocations[*index].y);
-		printf("\n%d z = %f", *index, electronLocations[*index].z);*/
 		
 		initialTime = time;
 		time += get_system_time();
