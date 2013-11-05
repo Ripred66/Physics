@@ -1,11 +1,7 @@
 OBJS = main.o particles.o constants.o newtonian.o elements.o electric.o systemtime.o
 CC = gcc
 DEBUG = -g
-<<<<<<< HEAD
-CFLAGS = -Wall -O3 -c -march=native $(DEBUG)
-=======
 CFLAGS = -Wall -O3 -c -mtune=native -march=native $(DEBUG)
->>>>>>> testing
 LFLAGS = -Wall -lpthread -lGL -LGLU -lglut -lm $(DEBUG)
 
 physics : $(OBJS)
@@ -31,10 +27,6 @@ electric.o : electric.h electric.c constants.h
 
 systemtime.o : systemtime.h systemtime.c
 	$(CC) $(CFLAGS) systemtime.c
-<<<<<<< HEAD
-	
-=======
-        
->>>>>>> testing
+
 clean :
 	\rm *.o physics
