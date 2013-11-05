@@ -401,7 +401,7 @@ void calculate_displacement( int *types , int index1 , int index2 , long double 
 			this->displacementX += metres_velocityTime( this->velocityX, time );
 		
 		}
-		if ( electronLocations[index1].y > electronLocations[index2].x ) {
+		if ( electronLocations[index1].y > electronLocations[index2].y ) {
 			
 			this->displacementY += metres_velocityTime( this->velocityY, time );
 		
