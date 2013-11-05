@@ -443,10 +443,6 @@ void calculate_displacement( int *types , int index1 , int index2 , long double 
 	
 	}
 	
-	/*this->displacementX += metres_velocityTime( this->velocityX , time );
-	this->displacementY += metres_velocityTime( this->velocityY , time );
-	this->displacementY += metres_velocityTime( this->velocityZ , time );*/
-	
 }
 void calculate_components( long double x , long double y , long double z , struct movement *this , int type ) {
 	
