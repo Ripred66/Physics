@@ -398,18 +398,42 @@ void calculate_displacement( int *types , int index1 , int index2 , long double 
 		
 		if ( electronLocations[index1].x > electronLocations[index2].x ) {
 			
-			this->displacementX += metres_velocityTime( this->velocityX, time );
+			this->displacementX += metres_velocityTime( this->velocityX , time );
+		
+		} else if ( electronLocations[index1].x == electronLocations[index2].x ) {
+			
+			
+		
+		} else {
+			
+			this->displacementX -= metres_velocityTime( this->velocityX , time  );
 		
 		}
 		if ( electronLocations[index1].y > electronLocations[index2].y ) {
 			
-			this->displacementY += metres_velocityTime( this->velocityY, time );
+			this->displacementY += metres_velocityTime( this->velocityY , time );
 		
+		} else if ( electronLocations[index1].y == electronLocations[index2].y ) {
+			
+			
+		
+		} else {
+			
+			this->displacementY -= metres_velocityTime( this->velocityY , time );
+			
 		}
 		if (electronLocations[index1].z > electronLocations[index2].z ) {
 			
-			this->displacementZ += metres_velocityTime( this->velocityZ, time );
+			this->displacementZ += metres_velocityTime( this->velocityZ , time );
 		
+		} else if ( electronLocations[index1].z == electronLocations[index2].z ) {
+			
+			
+		
+		} else {
+			
+			this->displacementZ -= metres_velocityTime( this->velocityZ , time );
+			
 		}
 		
 	
