@@ -169,6 +169,7 @@ void *electron( void *loc ) {
 			calculate_force( *index, x, &current );
 			calculate_acceleration( electronAttributes.mass , &current );
 			calculate_velocity( *index, x , time - initialTime , &current );
+			calculate_displacement( *index , x , time - initialTime , &current );
 		
 		}
 		
@@ -200,9 +201,9 @@ void *proton( void *loc ) {
 	hold[0].tv_nsec = 250000000;
 	
 	
-	protonLocations[*index].x = -.6700000; //get_float() - get_float();
-	protonLocations[*index].y = .6700000; //get_float() - get_float();
-	protonLocations[*index].z = .5000000; //get_float() - get_float();
+	protonLocations[*index].x = get_float() - get_float();
+	protonLocations[*index].y = get_float() - get_float();
+	protonLocations[*index].z = get_float() - get_float();
 	
 	for ( x = 0;x < numParticles[0].amountElectron;x++ ) {
 		
@@ -252,6 +253,7 @@ void *proton( void *loc ) {
 			calculate_force( *index , x , &current );
 			calculate_acceleration( protonAttributes.mass , &current );
 			calculate_velocity( *index , x , time - initialTime , &current );
+			calculate_displacement( *index , x , time - initialTime , &current );
 			
 		
 		}
@@ -274,9 +276,12 @@ void *proton( void *loc ) {
 			
 		}
 		
+		protonLocations[*index].x += current.displacementX;
+		protonLocations[*index].y += current.displacementY;
+		protonLocations[*index].z += current.displacementZ;
+		
 		initialTime = time;
 		time += get_system_time();
-		
 		nanosleep( hold , NULL );
 	
 	}
@@ -486,11 +491,144 @@ void calculate_displacement( int index1 , int index2 , long double time , struct
 				this->displacementZ -= ( metres_velocityTime( this->velocityZ , time ) / scale );
 			
 			}
+			
 		break;
 		
 		case EL_PR:
 		
+			if ( electronLocations[index1].x > protonLocations[index2].x ) {
+				
+				this->displacementX -= ( metres_velocityTime( this->velocityX , time ) );
+			
+			} else if ( electronLocations[index1].x == protonLocations[index2].x ) {
+				
+				
+				
+			} else {
+				
+				this->displacementX += ( metres_velocityTime( this->velocityX , time ) );
+			
+			}
+			
+			if ( electronLocations[index1].y > protonLocations[index2].y ) {
+				
+				this->displacementY -= ( metres_velocityTime( this->velocityY , time ) );
+			
+			} else if ( electronLocations[index1].y == protonLocations[index2].y ) {
+				
+			
+				
+			} else {
+				
+				this->displacementY += ( metres_velocityTime( this->velocityY , time ) );
+			
+			}
+			
+			if ( electronLocations[index1].z > protonLocations[index2].z ) {
+				
+				this->displacementZ -= ( metres_velocityTime( this->velocityZ , time ) );
+			
+			} else if ( electronLocations[index1].z == protonLocations[index2].z ) {
+				
+				
+			
+			} else {
+				
+				this->displacementZ += ( metres_velocityTime( this->velocityZ , time ) );
+			
+			}
 		
+		break;
+		
+		case PR_PR:
+		
+			if ( protonLocations[index1].x > protonLocations[index2].x ) {
+			
+				this->displacementX += ( metres_velocityTime( this->velocityX , time ) / scale );
+		
+			} else if ( protonLocations[index1].x == protonLocations[index2].x ) {
+			
+			
+		
+			} else {
+			
+				this->displacementX -=  ( metres_velocityTime( this->velocityX , time ) / scale );
+		
+			}
+		
+			if ( protonLocations[index1].y > protonLocations[index2].y ) {
+			
+				this->displacementY += ( metres_velocityTime( this->velocityY , time ) / scale );
+		
+			} else if ( protonLocations[index1].y == protonLocations[index2].y ) {
+			
+				
+		
+			} else {
+			
+				this->displacementY -= ( metres_velocityTime( this->velocityY , time ) / scale );
+				
+			}
+		
+			if ( protonLocations[index1].z > protonLocations[index2].z ) {
+			
+				this->displacementZ += ( metres_velocityTime( this->velocityZ , time ) / scale );
+		
+			} else if ( protonLocations[index1].z == protonLocations[index2].z ) {
+			
+			
+		
+			} else {
+			
+				this->displacementZ -= ( metres_velocityTime( this->velocityZ , time ) / scale );
+			
+			}
+		
+		break;
+		
+		case PR_EL:
+		
+			if ( protonLocations[index1].x > electronLocations[index2].x ) {
+				
+				this->displacementX -= ( metres_velocityTime( this->velocityX , time ) );
+			
+			} else if ( protonLocations[index1].x == electronLocations[index2].x ) {
+				
+				
+				
+			} else {
+				
+				this->displacementX += ( metres_velocityTime( this->velocityX , time ) );
+			
+			}
+			
+			if ( protonLocations[index1].y > electronLocations[index2].y ) {
+				
+				this->displacementY -= ( metres_velocityTime( this->velocityY , time ) );
+			
+			} else if ( protonLocations[index1].y == electronLocations[index2].y ) {
+				
+			
+				
+			} else {
+				
+				this->displacementY += ( metres_velocityTime( this->velocityY , time ) );
+			
+			}
+			
+			if ( protonLocations[index1].z > electronLocations[index2].z ) {
+				
+				this->displacementZ -= ( metres_velocityTime( this->velocityZ , time ) );
+			
+			} else if ( protonLocations[index1].z == electronLocations[index2].z ) {
+				
+				
+			
+			} else {
+				
+				this->displacementZ += ( metres_velocityTime( this->velocityZ , time ) );
+			
+			}
 		
 		break;
 		
