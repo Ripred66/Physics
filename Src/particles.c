@@ -73,6 +73,8 @@ struct particle protonAttributes;
 float get_float();
 
 void check_system();
+
+void calculate_difference( int index1 , int index2 , long double *x , long double *y , long double *z , int type );
 							 
 void calculate_force( int index1 , int index2 , struct movement *this );
 void calculate_acceleration( long double mass , struct movement *this );
@@ -315,6 +317,47 @@ void check_system() {
 	
 }
 
+void calculate_difference( int index1 , int index2 , long double *x , long double *y , long double *z , int type ) {
+	
+	switch ( type ) {
+		
+		case EL_EL:
+		
+			*x = electronLocations[index1].x - electronLocations[index2].x;
+			*y = electronLocations[index1].y - electronLocations[index2].y;
+			*z = electronLocations[index1].z - electronLocations[index2].z;
+			
+		break;
+		
+		case EL_PR:
+		
+			*x = electronLocations[index1].x - protonLocations[index2].x;
+			*y = electronLocations[index1].y - protonLocations[index2].y;
+			*z = electronLocations[index1].z - protonLocations[index2].z;
+		
+		break;
+		
+		case PR_PR:
+		
+			*x = protonLocations[index1].x - protonLocations[index2].x;
+			*y = protonLocations[index1].y - protonLocations[index2].y;
+			*z = protonLocations[index1].z - protonLocations[index2].z;
+		
+		break;
+		
+		case PR_EL:
+		
+			*x = protonLocations[index1].x - electronLocations[index2].x;
+			*y = protonLocations[index1].y - electronLocations[index2].y;
+			*z = protonLocations[index1].z - electronLocations[index2].z;
+		
+		break;
+	
+	
+	}
+
+}
+
 void calculate_force( int index1 , int index2 ,  struct movement *this ) {
 	
 	
@@ -329,9 +372,7 @@ void calculate_force( int index1 , int index2 ,  struct movement *this ) {
 		
 		case EL_EL:
 		
-			x = electronLocations[index1].x - electronLocations[index2].x;
-			y = electronLocations[index1].y - electronLocations[index2].y;
-			z = electronLocations[index1].z - electronLocations[index2].z;
+			calculate_difference( index1 , index2 , &x , &y , &z , this->type );
 		
 			distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
@@ -342,10 +383,7 @@ void calculate_force( int index1 , int index2 ,  struct movement *this ) {
 		
 		case EL_PR:
 		
-			x = electronLocations[index1].x - protonLocations[index2].x;
-			y = electronLocations[index1].y - protonLocations[index2].y;
-			z = electronLocations[index1].z - protonLocations[index2].z;
-		
+			calculate_difference( index1 , index2 , &x , &y , &z , this->type );
 		
 			distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
@@ -356,10 +394,7 @@ void calculate_force( int index1 , int index2 ,  struct movement *this ) {
 		
 		case PR_PR:
 		
-			x = protonLocations[index1].x - protonLocations[index2].x;
-			y = protonLocations[index1].y - protonLocations[index2].y;
-			z = protonLocations[index1].z - protonLocations[index2].z;
-		
+			calculate_difference( index1 , index2 , &x , &y , &z , this->type );
 		
 			distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
@@ -370,9 +405,7 @@ void calculate_force( int index1 , int index2 ,  struct movement *this ) {
 		
 		case PR_EL:
 		
-			x = protonLocations[index1].x - electronLocations[index2].x;
-			y = protonLocations[index1].y - electronLocations[index2].y;
-			z = protonLocations[index1].z - electronLocations[index2].z;
+			calculate_difference( index1 , index2 , &x , &y , &z , this->type );
 			
 			distance =  sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 			
@@ -395,43 +428,7 @@ void calculate_velocity( int index1 , int index2 ,  long double time , struct mo
 	
 	long double x , y , z;
 	
-	
-	switch ( this->type ) {
-		
-		case EL_EL:
-		
-			x = electronLocations[index1].x - electronLocations[index2].x;
-			y = electronLocations[index1].y - electronLocations[index2].y;
-			z = electronLocations[index1].z - electronLocations[index2].z;
-		
-		break;
-		
-		case EL_PR:
-		
-			x = electronLocations[index1].x - protonLocations[index2].x;
-			y = electronLocations[index1].y - protonLocations[index2].y;
-			z = electronLocations[index1].z - protonLocations[index2].z;
-		
-		break;
-		
-		case PR_PR:
-		
-			x = protonLocations[index1].x - protonLocations[index2].x;
-			y = protonLocations[index1].y - protonLocations[index2].y;
-			z = protonLocations[index1].z - protonLocations[index2].z;
-		
-		break;
-		
-		case PR_EL:
-		
-			x = protonLocations[index1].x - protonLocations[index2].x;
-			y = protonLocations[index1].y - protonLocations[index2].y;
-			z = protonLocations[index1].z - protonLocations[index2].z;
-		
-		break;
-	
-	
-	}
+	calculate_difference( index1 , index2 , &x , &y , &z , this->type );
 	
 	this->velocity += velocity_accelerationTime( this->acceleration, time ) - this->velocity;
 	
