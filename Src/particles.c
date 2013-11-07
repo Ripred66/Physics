@@ -373,24 +373,20 @@ void calculate_force( int index1 , int index2 ,  struct movement *this ) {
 	long double distance;
 	
 	
+	calculate_difference( index1 , index2 , &x , &y , &z , this->type );
+		
+	distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
+	
 	switch ( this->type ) {
 		
 		case EL_EL:
 		
-			calculate_difference( index1 , index2 , &x , &y , &z , this->type );
-		
-			distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
-		
 			this->force += force_kqqR2( electronAttributes.charge , electronAttributes.charge ,
 										distance * scale ) - this->force;
-		
+										
 		break;
 		
 		case EL_PR:
-		
-			calculate_difference( index1 , index2 , &x , &y , &z , this->type );
-		
-			distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 		
 			this->force += force_kqqR2( electronAttributes.charge , protonAttributes.charge ,
 										distance * scale ) - this->force;
@@ -399,20 +395,12 @@ void calculate_force( int index1 , int index2 ,  struct movement *this ) {
 		
 		case PR_PR:
 		
-			calculate_difference( index1 , index2 , &x , &y , &z , this->type );
-		
-			distance = sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
-		
 			this->force += force_kqqR2( protonAttributes.charge , protonAttributes.charge ,
 									distance * scale ) - this->force;
 		
 		break;
 		
 		case PR_EL:
-		
-			calculate_difference( index1 , index2 , &x , &y , &z , this->type );
-			
-			distance =  sqrtl( ( x * x ) + ( y * y ) + ( z * z ) );
 			
 			this->force += force_kqqR2( protonAttributes.charge , electronAttributes.charge , 
 										distance * scale ) - this->force;
